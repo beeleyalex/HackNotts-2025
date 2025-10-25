@@ -58,7 +58,7 @@ float vertices[] = {
 
 int sWidth = 1600, sHeight = 1400;
 
-Camera camera = Camera(glm::vec3(2.5f, 2.5f, 2.5f), sWidth, sHeight);
+Camera camera = Camera(glm::vec3(6.0f, 2.5f, 6.0f), sWidth, sHeight);
 Player player = Player();
 
 int main()
@@ -137,6 +137,9 @@ int main()
 
     Shader shader = Shader("../../vertex.glsl", "../../fragment.glsl");
 
+    float prevTime = 0;
+    float deltaTime;
+
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
@@ -145,11 +148,10 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 model = glm::mat4(1.0f);
-        //model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
-        //model = glm::rotate(model, glm::radians(-45.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(2.5f, 0.6f, 2.5f));
+        model = glm::translate(model, glm::vec3(-1.0f, -1.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(3.0f, 0.6f, 3.0f));
         float time = glfwGetTime();
-        //model = glm::rotate(model, glm::radians(3 * time), glm::vec3(1.0f, 0.3f, 0.2f));
+        deltaTime = time - prevTime;
 
         glm::mat4 view = /*glm::mat4(1.0f);*/ glm::lookAt(glm::vec3(3.0f, 2.0f, -3.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
@@ -167,12 +169,12 @@ int main()
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        glm::mat4 playerModel = glm::mat4(1.0f);
-        playerModel = glm::translate(playerModel, player.pos);
-        playerModel = glm::scale(playerModel, glm::vec3(0.8f));
-        shader.setUniformMat4("model", glm::translate(glm::mat4(1.0f), player.pos));
+        player.move(deltaTime * glm::vec3(0.1f, 0.0f, 0.1f));
+        shader.setUniformMat4("model", player.modelMatrix);
         player.draw();
 
+
+        prevTime = time;
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

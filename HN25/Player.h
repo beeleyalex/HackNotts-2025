@@ -11,10 +11,12 @@ class Player
 {
 public:
     glm::vec3 pos;
+    glm::mat4 modelMatrix;
 
     Player()
     {
-        pos = glm::vec3(0.0f, 1.0f, 0.0f);
+        modelMatrix = glm::mat4(1.0f);
+        pos = glm::vec3(-1.0f, 0.0f, 1.0f);
     }
 
     void init()
@@ -68,6 +70,14 @@ public:
     void move(glm::vec3 vector)
     {
         pos += vector;
+        updateModelMatrix();
+    }
+
+    void updateModelMatrix()
+    {
+        modelMatrix = glm::mat4(1.0f);
+        modelMatrix = glm::translate(modelMatrix, pos);
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.6f));
     }
 
     static constexpr float vertices[] = {
