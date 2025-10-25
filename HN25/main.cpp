@@ -6,11 +6,12 @@
 #include "Camera.h"
 #include "stb_image.h"
 #include "Player.h"
+#include "Tree.h"
 
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow*, int, int);
-void processInput(GLFWwindow*);
+void processInput(GLFWwindow*, float);
 
 float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -135,6 +136,9 @@ int main()
 
     player.init();
 
+    Tree tree = Tree(glm::vec3(0.2f, 0.0f, 1.75f));
+    tree.init();
+
     Shader shader = Shader("../../vertex.glsl", "../../fragment.glsl");
 
     float prevTime = 0;
@@ -142,22 +146,20 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
-        processInput(window);
-
         glClearColor(0.0f, 0.16f, 0.3f, 0.6f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        float time = glfwGetTime();
+        deltaTime = time - prevTime;
+        processInput(window, deltaTime);
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-1.0f, -1.0f, 1.0f));
         model = glm::scale(model, glm::vec3(3.0f, 0.6f, 3.0f));
-        float time = glfwGetTime();
-        deltaTime = time - prevTime;
 
-        glm::mat4 view = /*glm::mat4(1.0f);*/ glm::lookAt(glm::vec3(3.0f, 2.0f, -3.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        //view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+        glm::mat4 view = glm::lookAt(glm::vec3(3.0f, 2.0f, -3.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
         float scalar = 1250.0f;
-        //glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)sWidth / (float)sHeight, 0.1f, 100.0f);
         glm::mat4 projection = glm::ortho((float)  - sWidth / scalar, (float) sWidth / scalar, (float) - sHeight / scalar, (float) sHeight / scalar, -10.0f, 1000.0f);
 
         shader.activate();
@@ -169,9 +171,11 @@ int main()
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        player.move(deltaTime * glm::vec3(0.1f, 0.0f, 0.1f));
         shader.setUniformMat4("model", player.modelMatrix);
         player.draw();
+
+        shader.setUniformMat4("model", tree.modelMatrix);
+        tree.draw();
 
 
         prevTime = time;
@@ -183,10 +187,36 @@ int main()
     return 0;
 }
 
-void processInput(GLFWwindow* window)
+void processInput(GLFWwindow* window, float deltaTime)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        player.move(deltaTime * glm::vec3(-0.2f, 0.0f, 0.2f));
+        player.setMoving(true);
+    }
+    else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE)
+        player.setMoving(false);
+    
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        player.move(deltaTime * glm::vec3(0.2f, 0.0f, -0.2f));
+        player.setMoving(true);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        player.move(deltaTime * glm::vec3(-0.2f, 0.0f, -0.2f));
+        player.setMoving(true);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        player.move(deltaTime * glm::vec3(0.2f, 0.0f, 0.2f));
+        player.setMoving(true);
+    }
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)

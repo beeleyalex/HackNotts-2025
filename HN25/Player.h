@@ -15,8 +15,8 @@ public:
 
     Player()
     {
-        modelMatrix = glm::mat4(1.0f);
         pos = glm::vec3(-1.0f, 0.0f, 1.0f);
+        updateModelMatrix();
     }
 
     void init()
@@ -38,9 +38,9 @@ public:
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) (3 * sizeof(float)));
         glEnableVertexAttribArray(1);
 
-
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        // still texture
+        glGenTextures(1, &textureStill);
+        glBindTexture(GL_TEXTURE_2D, textureStill);
 
         stbi_set_flip_vertically_on_load(true);
 
@@ -56,7 +56,25 @@ public:
             std::cout << "Failed to load texture" << std::endl;
 
         stbi_image_free(data);
+        // ================
 
+        // shmoving
+        glGenTextures(1, &textureShmoving);
+        glBindTexture(GL_TEXTURE_2D, textureShmoving);
+
+        data = stbi_load("../../resources/textures/firewiz-shmoovin.jpg", &width, &height, &nrChannels, 0);
+
+        if (data)
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+        }
+        else
+            std::cout << "Failed to load texture" << std::endl;
+
+        stbi_image_free(data);
+
+        texture = textureStill;
     }
 
     void draw()
@@ -77,7 +95,15 @@ public:
     {
         modelMatrix = glm::mat4(1.0f);
         modelMatrix = glm::translate(modelMatrix, pos);
-        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.6f));
+        modelMatrix = glm::scale(modelMatrix, glm::vec3(0.4f));
+    }
+
+    void setMoving(bool mov)
+    {
+        if (mov)
+            texture = textureShmoving;
+        else
+            texture = textureStill;
     }
 
     static constexpr float vertices[] = {
@@ -95,7 +121,7 @@ public:
 
 
 private:
-    unsigned int VBO, VAO, EBO, texture;
+    unsigned int VBO, VAO, EBO, texture, textureStill, textureShmoving;
 
 };
 

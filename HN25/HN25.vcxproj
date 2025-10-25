@@ -138,6 +138,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Tree.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.glsl" />
