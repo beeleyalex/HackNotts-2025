@@ -5,6 +5,7 @@
 #include "shader.h"
 #include "Camera.h"
 #include "stb_image.h"
+#include "Player.h"
 
 #include <iostream>
 
@@ -55,14 +56,10 @@ float vertices[] = {
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
 
-unsigned int indices[] = {
-    0, 1, 3,  // first Triangle
-    1, 2, 3   // second Triangle
-};
-
 int sWidth = 1600, sHeight = 1400;
 
 Camera camera = Camera(glm::vec3(2.5f, 2.5f, 2.5f), sWidth, sHeight);
+Player player = Player();
 
 int main()
 {
@@ -136,6 +133,8 @@ int main()
 
     stbi_image_free(data);
 
+    player.init();
+
     Shader shader = Shader("../../vertex.glsl", "../../fragment.glsl");
 
     while (!glfwWindowShouldClose(window))
@@ -167,6 +166,12 @@ int main()
         glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        glm::mat4 playerModel = glm::mat4(1.0f);
+        playerModel = glm::translate(playerModel, player.pos);
+        playerModel = glm::scale(playerModel, glm::vec3(0.8f));
+        shader.setUniformMat4("model", glm::translate(glm::mat4(1.0f), player.pos));
+        player.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
