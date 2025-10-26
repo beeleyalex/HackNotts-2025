@@ -11,10 +11,16 @@ class Player
 {
 public:
     glm::vec3 pos;
+    glm::vec3 prevPos;
     glm::mat4 modelMatrix;
+    glm::vec3 direction;
+    bool dead = false;
+
+    int health = 3;
 
     Player()
     {
+        direction = glm::vec3(0.0f, 0.0f, 1.0f);
         pos = glm::vec3(-1.0f, 0.0f, 1.0f);
         updateModelMatrix();
     }
@@ -87,7 +93,9 @@ public:
 
     void move(glm::vec3 vector)
     {
+        prevPos = pos;
         pos += vector;
+        direction = glm::normalize(pos - prevPos);
         updateModelMatrix();
     }
 

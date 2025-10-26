@@ -44,12 +44,24 @@
     <ClInclude Include="Tree.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="vertex.glsl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="fragment.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="cubemapFragment.glsl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="cubemapVertex.glsl">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
