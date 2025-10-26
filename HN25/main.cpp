@@ -304,7 +304,7 @@ int main()
         {
             Particle& p = particles[i];
             glm::vec3 dir = player.direction;
-            p.move((float) (1.2 * deltaTime) * dir);
+            p.move((float) (1.2 * deltaTime));
             //p.move(glm::vec3(0.0f, 0.0f, deltaTime * 1.2));
             shader.setUniformMat4("model", p.modelMatrix);
             p.draw();
@@ -388,7 +388,7 @@ void processInput(GLFWwindow* window, float deltaTime)
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !spacePressed)
     {
         spacePressed = true;
-        Particle p = Particle(player.pos);
+        Particle p = Particle(player.pos, player.direction);
         p.init();
         particles.push_back(p);
     }

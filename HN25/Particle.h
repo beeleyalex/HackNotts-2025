@@ -15,9 +15,10 @@ class Particle
 public:
 	glm::vec3 pos;
     glm::mat4 modelMatrix;
+    glm::vec3 direction;
     float totalMoved = 1.0f;
 
-	Particle(glm::vec3 position) : pos(position)
+	Particle(glm::vec3 position, glm::vec3 dir) : pos(position), direction(dir)
 	{
         updateModelMatrix();
 	}
@@ -61,10 +62,10 @@ public:
         stbi_image_free(data);
     }
 
-    void move(glm::vec3 vector)
+    void move(float speed)
     {
-        totalMoved += glm::length(vector);
-        pos += vector;
+        totalMoved += glm::length((float) speed * direction);
+        pos += (float) speed * direction;
         updateModelMatrix();
     }
 
